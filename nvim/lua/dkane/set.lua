@@ -16,3 +16,5 @@ vim.opt.wrap = false
 
 vim.g.mapleader = " "
 
+vim.opt_local.suffixesadd:prepend('.lua')
+vim.opt_local.suffixesadd:prepend('init.lua')

@@ -116,6 +116,7 @@ alias nv="nvim"
 alias v="nvim"
 alias tn="tmux neww"
 alias goo="google"
+alias status="git status"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
