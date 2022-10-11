@@ -167,8 +167,8 @@ fi
 
 #replace with whatever script you prefer to run or I can add these to repos
 
-alias down='psh scripts/teardown.ps1'
-alias up='psh scripts/setup-local.ps1'
+alias down='pwsh scripts/teardown.ps1'
+alias up='pwsh scripts/setup-local.ps1'
 alias db='dotnet build'
 alias dt='dotnet test'
 alias reup='down && db && up'
