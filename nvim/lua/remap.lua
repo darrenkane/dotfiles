@@ -1,5 +1,5 @@
-local nnoremap = require("dkane.keymap").nnoremap
-local inoremap = require("dkane.keymap").inoremap
+local nnoremap = require("keymap").nnoremap
+local inoremap = require("keymap").inoremap
 
 nnoremap("<C-j>", "<C-w>j")
 nnoremap("<C-k>", "<C-w>k")

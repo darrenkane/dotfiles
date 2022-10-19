@@ -121,7 +121,7 @@ alias status="git status"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-nohup sudo -b dockerd < /dev/null > ~/.docker/logs/startup.log 2>&1
+#nohup sudo -b dockerd < /dev/null > ~/.docker/logs/startup.log 2>&1
 LS_COLORS+=':ow=01;33'
 
 
