@@ -1,30 +1,51 @@
+require("treesitter")
+require("plugins")
 require("set")
 require("remap")
+
+local function on_attach(client, buf)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer = buf})
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, {buffer = buf})
+    vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, {buffer = buf})
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, {buffer = buf})
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {buffer = buf})
+    vim.keymap.set("n", "rn", vim.lsp.buf.rename, {buffer = buf})
+    vim.keymap.set("n", "<C-Space>", vim.lsp.buf.code_action, {buffer = buf})
+    vim.keymap.set("n", "<Leader>df", vim.diagnostic.goto_next, {buffer = buf})
+    vim.keymap.set("n", "<Leader>dt", vim.diagnostic.goto_prev, {buffer = buf})
+    vim.keymap.set("n", "<Leader>dl", "<cmd>Telescope diagnostics<cr>", {})
+    vim.keymap.set("n", "<Leader>ff", "<cmd>Telescope find_files<cr>", {})
+    vim.keymap.set("n", "<Leader>fg", "<cmd>Telescope live_grep<cr>", {})
+    vim.keymap.set("n", "<Leader>fb", "<cmd>Telescope buffers<cr>", {})
+    vim.keymap.set("n", "<Leader>fh", "<cmd>Telescope help_tags<cr>", {})
+    vim.keymap.set("n", "<Leader>fr", "<cmd>Telescope lsp_references<cr>", {})
+end
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local rt = {
     server = {
         settings = {
-            on_attach = function(_, bufnr)
-                -- Hover actions
-                vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-                -- Code action groups
-                vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-                require 'illuminate'.on_attach(client)
-            end,
+            capabilities = capabilities,
+            on_attach = on_attach,
             ["rust-analyzer"] = {
                 lens = {
                     enable = false
                 },
                 checkOnSave = {
-                    command = "clippy"
-                }, 
-            },
+                    command = "clippy",
+                    target = "/tmp/rust-analyzer-check"
+                },
+            }
         }
     },
 }
 require('rust-tools').setup(rt)
 
-require('lspconfig').gopls.setup{}
+require('lspconfig').gopls.setup{
+    capabilities = capabilities,
+    on_attach = on_attach
+}
 
 -- LSP Diagnostics Options Setup 
 local sign = function(opts)
@@ -59,6 +80,11 @@ vim.lsp.util.open_float = false
 -- Completion Plugin Setup
 local cmp = require'cmp'
 cmp.setup({
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -103,17 +129,4 @@ cmp.setup({
   },
 })
 
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "go", "lua", "rust", "toml" },
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting=false,
-  },
-  ident = { enable = true }, 
-  rainbow = {
-    enable = true,
-    extended_mode = true,
-    max_file_lines = nil,
-  }
-}
+require("telescope").setup()
